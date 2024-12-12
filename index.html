@@ -28,27 +28,29 @@
             top: -80px; /* One inch above the round image */
             left: 50%;
             transform: translateX(-50%);
-            background: #fff8dc; /* Light background for better visibility */
-            color: #333;
+            background: #ffffff; /* White background */
+            color: #333; /* Text color for MAI */
             font-size: 1.5rem;
             font-weight: bold;
             width: 180px;
-            height: 65px;
+            height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 25px;
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid #ccc;
+            border: 2px solid #ddd;
         }
 
         .score span {
-            color: #ff8c00; /* Unique color for score number */
+            color: #ffc107; /* Yellow for score number */
             margin-right: 5px;
         }
 
-        .score span.unit {
-            color: #008b8b; /* Color for "MAI" */
+        /* Currency or Token Symbol */
+        .currency-symbol {
+            font-size: 1.2rem;
+            color: #00bcd4;
         }
 
         /* Circle Image */
@@ -77,6 +79,22 @@
             box-shadow: 0 0 50px 15px rgba(255, 255, 0, 0.8), 0 0 60px 20px rgba(0, 255, 255, 0.7);
         }
 
+        .circle-image.tap-effect {
+            animation: tapEffect 0.5s ease-out;
+        }
+
+        @keyframes tapEffect {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
         footer {
             text-align: center;
             margin-top: 20px;
@@ -90,14 +108,13 @@
     <div class="container">
         <!-- Scoreboard -->
         <div class="score" id="scoreDisplay">
-            <span>0</span><span class="unit">MAI</span>
+            <span class="currency-symbol">💎</span><span id="scoreValue">0</span> MAI
         </div>
 
         <!-- Circle Image -->
-        <div class="circle-image" onclick="increaseScore(event)">
+        <div class="circle-image" onclick="increaseScore()" onpointerdown="addTapEffect()">
             <span>MAI</span>
         </div>
-
         <footer>
             <p>Tap to Earn</p>
         </footer>
@@ -106,16 +123,21 @@
     <script>
         // Load Score from localStorage
         let score = parseInt(localStorage.getItem('score') || '0');
-        document.querySelector('.score span').innerText = score;
+        document.querySelector('#scoreValue').innerText = score;
 
-        // Function to increase score with multi-tap feature
-        function increaseScore(event) {
+        // Function to increase score
+        function increaseScore() {
             const circleImage = document.querySelector('.circle-image');
-            const touches = event.touches ? event.touches.length : 1;
 
-            // Increase score based on the number of fingers (multi-touch)
-            score += touches;
-            document.querySelector('.score span').innerText = score;
+            // Check if 5 fingers (fingersCount = 5) are pressed for bonus points
+            if (window.fingersCount === 5) {
+                score += 5; // Add 5 points for 5 fingers
+            } else {
+                score += 1; // Default: 1 point per tap
+            }
+
+            // Update score display
+            document.querySelector('#scoreValue').innerText = score;
 
             // Save to localStorage
             localStorage.setItem('score', score);
@@ -123,15 +145,30 @@
             // Add active class for glow effect
             circleImage.classList.add('active');
 
-            // Add inner touch effect on circle image
-            circleImage.style.background = `radial-gradient(circle, rgba(255,255,255,0.5) ${Math.random()*10}%, rgba(255,255,255,0) ${Math.random()*20}%)`;
-
             // Remove active class after a short delay
             setTimeout(() => {
                 circleImage.classList.remove('active');
-                circleImage.style.background = ''; // Reset background after effect
             }, 500); // Glow effect lasts 0.5 seconds
         }
+
+        // Function to handle tap effect (show animation when tapping)
+        function addTapEffect() {
+            const circleImage = document.querySelector('.circle-image');
+            circleImage.classList.add('tap-effect');
+
+            // Remove effect after animation
+            setTimeout(() => {
+                circleImage.classList.remove('tap-effect');
+            }, 500);
+        }
+
+        // Detect number of fingers for bonus points
+        let fingersCount = 0;
+        document.body.addEventListener('pointerdown', (event) => {
+            fingersCount = event.pointerId ? event.pointerId : 0;
+            window.fingersCount = event.getCoalescedEvents ? event.getCoalescedEvents().length : 1;
+        });
+
     </script>
 </body>
 </html>
