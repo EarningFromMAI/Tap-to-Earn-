@@ -25,7 +25,7 @@
         /* Scoreboard */
         .score {
             position: absolute;
-            top: -40px; /* Half inch above the round image */
+            top: -80px; /* One inch above the round image */
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(90deg, #007bff, #6a11cb);
@@ -78,10 +78,12 @@
 </head>
 <body>
     <div class="container">
+        <!-- Scoreboard -->
+        <div class="score" id="scoreDisplay">0</div>
+
         <!-- Circle Image -->
         <div class="circle-image" onclick="increaseScore()">
             <span>MAI</span>
-            <div class="score" id="scoreDisplay">0</div>
         </div>
         <footer>
             <p>Tap to Earn</p>
