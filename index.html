@@ -3,220 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tap to Earn</title>
+    <title>Earning From M A I</title>
     <style>
+        /* General Styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            flex-direction: column; /* Added to arrange content vertically */
+            align-items: flex-start;
+            min-height: 100vh;
         }
 
         .container {
-            text-align: center;
+            width: 90%;
+            max-width: 700px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
             position: relative;
         }
 
-        /* Scoreboard */
-        .score {
-            position: absolute;
-            top: -80px; /* One inch above the round image */
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff; /* White background */
-            color: #333; /* Text color for MAI */
-            font-size: 1.5rem;
-            font-weight: bold;
-            width: 180px;
+        h2 {
+            color: #333;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info, .balance-info, .ads-container {
+            margin-bottom: 20px;
+        }
+
+        .profile-info img {
+            width: 60px;
             height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 25px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid #ddd;
-        }
-
-        .score span {
-            color: #ffd700; /* Golden yellow for score number */
-            margin-right: 5px;
-        }
-
-        .currency-symbol {
-            font-size: 1.2rem;
-            color: #00bcd4;
-        }
-
-        /* Circle Image */
-        .circle-image {
-            width: 220px;
-            height: 220px;
             border-radius: 50%;
-            background: radial-gradient(circle, #ff7e5f, #feb47b, #fdffba);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), inset 0 -5px 10px rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
         }
 
-        .circle-image span {
-            font-size: 3.5rem; /* Larger MAI text */
+        .profile-info h3 {
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        .balance {
+            font-size: 1.6rem;
+            color: #28a745;
             font-weight: bold;
-            color: #b9f2ff; /* Hira color */
-            text-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+            text-align: center;
         }
 
-        .circle-image.active {
-            box-shadow: 0 0 50px 15px rgba(255, 255, 0, 0.8), 0 0 60px 20px rgba(0, 255, 255, 0.7);
+        .ad-card {
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        .circle-image.tap-effect {
-            animation: tapEffect 0.5s ease-out;
+        .ad-card button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
-        @keyframes tapEffect {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(0.95);
-            }
-            100% {
-                transform: scale(1);
-            }
+        .ad-card button:hover {
+            background: #0056b3;
         }
 
         footer {
             text-align: center;
             margin-top: 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #333;
+            font-size: 0.9rem;
+            color: #666;
         }
 
-        /* Diamond Color */
-        .diamond {
-            color: #b9f2ff; /* Diamond color */
-            font-size: 1.5rem;
-        }
-
-        /* Back Button */
-        .back-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
+        /* Menu Button */
+        .menu-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #007bff;
             color: #fff;
-            background-color: #007bff;
+            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
+            font-size: 1.2rem;
+            z-index: 10;
         }
 
-        .back-button:hover {
-            background-color: #0056b3;
+        .menu-button:hover {
+            background: #0056b3;
+        }
+
+        /* Menu Popup */
+        .menu-popup {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            width: 200px;
+            z-index: 10;
+        }
+
+        .menu-popup a {
+            display: block;
+            padding: 10px;
+            color: #007bff;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .menu-popup a:last-child {
+            border-bottom: none;
+        }
+
+        .menu-popup a:hover {
+            background: #f9f9f9;
+        }
+
+        /* Popup Form Styling */
+        .popup-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .popup-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .popup-content button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
+    <div class="popup-form" id="popupForm">
+        <div class="popup-content">
+            <h3>Enter Your Name</h3>
+            <input type="text" id="usernameInput" placeholder="Your Name">
+            <button onclick="saveName()">Save</button>
+        </div>
+    </div>
+
     <div class="container">
-        <!-- Scoreboard -->
-        <div class="score" id="scoreDisplay">
-            <span class="currency-symbol diamond">💎</span><span id="scoreValue">0</span> MAI
+        <!-- Menu Button -->
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
+
+        <!-- Menu Popup -->
+        <div class="menu-popup" id="menuPopup">
+            <a href="https://earningfrommai.github.io/Tap-to-Earn-/">Tap To Earn</a>
+            <a href="#" onclick="showWithdraw()">Withdraw</a>
+            <a href="https://t.me/mdazizulislam1">Admin Contact</a>
+            <a href="https://t.me/EarningFromMAI" target="_blank">Help</a>
         </div>
 
-        <!-- Circle Image -->
-        <div class="circle-image" id="circleImage" 
-             onpointerdown="addTapEffect(event)" 
-             onpointerup="countFingers(event)">
-            <span>MAI</span>
+        <!-- Profile Section -->
+        <div class="profile-info">
+            <img src="https://via.placeholder.com/60" alt="Profile Image" id="profileImage">
+            <h3 id="profileName">User Name</h3>
         </div>
+
+        <!-- Balance Section -->
+        <div class="balance-info">
+            <h3>Your Balance:</h3>
+            <div class="balance" id="balance">0.000 USD</div>
+        </div>
+
+        <!-- Ads Section -->
+        <div class="ads-container" id="adsContainer"></div>
+
+        <!-- Footer -->
         <footer>
-            <p>Tap to Earn</p>
+            <p>All rights reserved © 2024. Contact: <a href="https://t.me/mdazizulislam1">Admin</a></p>
         </footer>
     </div>
 
-    <!-- Back Button -->
-    <button class="back-button" onclick="goBack()">Back</button>
-
     <script>
-        // Load Score from localStorage
-        let score = parseInt(localStorage.getItem('score') || '0');
-        document.querySelector('#scoreValue').innerText = score;
+        let balance = parseFloat(localStorage.getItem('balance') || '0.000');
+        const adEarnings = 0.050; // Earnings per ad
+        const totalAds = 20; // Total number of ads
 
-        let fingersCount = 0; // To count the number of fingers during a tap
+        // Ad Data: 20 ads with different titles, descriptions, and URLs, and different earnings
+        const adsData = [
+            { title: 'Ad 1', description: 'ওপেন করুন এবং আপনার তথ্য দিন 0.020 USD!', url: 'https://luglawhaulsano.net/4/8635162/ad1', earnings: 0.020 },
+            { title: 'Ad 2', description: 'Watch and earn 4.00 USD!', url: 'https://example.com/ad2', earnings: 0.00 },
+            { title: 'Ad 3', description: 'Watch and earn 6.00 USD!', url: 'https://example.com/ad3', earnings: 0.00 },
+            { title: 'Ad 4', description: 'Watch and earn 3.010 USD!', url: 'https://example.com/ad4', earnings: 0.00 },
+            { title: 'Ad 5', description: 'ওপেন করুন এবং আপনার তথ্য দিন 0.025 USD!', url: 'https://www.profitablecpmrate.com/wqe02yerqh?key=f441e7cb2d4ca294e8301f7461a42644/ad5', earnings: 0.025 },
+            { title: 'Ad 6', description: 'Watch and earn 6.00 USD!', url: 'https://example.com/ad6', earnings: 0.00 },
+            { title: 'Ad 7', description: 'Watch and earn 7.50 USD!', url: 'https://example.com/ad7', earnings: 0.00 },
+            { title: 'Ad 8', description: 'Watch and earn 8.00 USD!', url: 'https://example.com/ad8', earnings: 0.00 },
+            { title: 'Ad 9', description: 'Watch and earn 9.00 USD!', url: 'https://example.com/ad9', earnings: 0.00 },
+            { title: 'Ad 10', description: 'ওপেন করুন এবং আপনার তথ্য দিন 0.020 USD!', url: 'https://luglawhaulsano.net/4/8635160/ad10', earnings: 0.020 },
+            { title: 'Ad 11', description: 'Watch and earn 5.50 USD!', url: 'https://example.com/ad11', earnings: 0.00 },
+            { title: 'Ad 12', description: 'Watch and earn 6.50 USD!', url: 'https://example.com/ad12', earnings: 0.00 },
+            { title: 'Ad 13', description: 'Watch and earn 7.50 USD!', url: 'https://example.com/ad13', earnings: 0.00 },
+            { title: 'Ad 14', description: 'Watch and earn 8.00 USD!', url: 'https://example.com/ad14', earnings: 0.00 },
+            { title: 'Ad 15', description: 'ওপেন করুন এবং আপনার তথ্য দিন 0.025 USD!', url: 'https://www.profitablecpmrate.com/tksacrk3?key=9baa4aebd3285c8cc012e37eaffe36a0/ad15', earnings: 0.025 },
+            { title: 'Ad 16', description: 'Watch and earn 7.00 USD!', url: 'https://example.com/ad16', earnings: 0.00 },
+            { title: 'Ad 17', description: 'Watch and earn 9.00 USD!', url: 'https://example.com/ad17', earnings: 0.00 },
+            { title: 'Ad 18', description: 'Watch and earn 10.00 USD!', url: 'https://example.com/ad18', earnings: 0.00 },
+            { title: 'Ad 19', description: 'Watch and earn 8.50 USD!', url: 'https://example.com/ad19', earnings: 0.00 },
+            { title: 'Ad 20', description: 'Watch and earn 7.00 USD!', url: 'https://example.com/ad20', earnings: 0.00 }
+        ];
 
-        // Function to increase score based on number of fingers
-        function increaseScore() {
-            const circleImage = document.querySelector('.circle-image');
-
-            // Add points based on number of fingers
-            if (fingersCount === 1) {
-                score += 1; // 1 finger = 1 point
-            } else if (fingersCount === 2) {
-                score += 2; // 2 fingers = 2 points
-            } else if (fingersCount === 3) {
-                score += 3; // 3 fingers = 3 points
-            } else if (fingersCount === 4) {
-                score += 4; // 4 fingers = 4 points
-            } else if (fingersCount >= 5) {
-                score += 5; // 5 or more fingers = 5 points
-            }
-
-            // Update score display
-            document.querySelector('#scoreValue').innerText = score;
-
-            // Save to localStorage
-            localStorage.setItem('score', score);
-
-            // Add active class for glow effect
-            circleImage.classList.add('active');
-
-            // Remove active class after a short delay
-            setTimeout(() => {
-                circleImage.classList.remove('active');
-            }, 500); // Glow effect lasts 0.5 seconds
+        // Toggle Menu Popup
+        function toggleMenu() {
+            const menuPopup = document.getElementById('menuPopup');
+            menuPopup.style.display = menuPopup.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Function to handle tap effect (show animation when tapping)
-        function addTapEffect(event) {
-            const circleImage = document.querySelector('.circle-image');
-            circleImage.classList.add('tap-effect');
-
-            // Remove effect after animation
-            setTimeout(() => {
-                circleImage.classList.remove('tap-effect');
-            }, 500);
-
-            // Call increaseScore when tapping
-            increaseScore();
+        // Show Withdraw Message
+        function showWithdraw() {
+            alert(`Development in progress. If your balance is 5 USD or more, please contact the admin to withdraw.`);
         }
 
-        // Function to count the number of fingers used during the tap
-        function countFingers(event) {
-            // For touch events, get the number of touch points (fingers used)
-            if (event.touches) {
-                fingersCount = event.touches.length;
+        // Save Name and Close Popup
+        function saveName() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (username) {
+                localStorage.setItem('username', username);
+                document.getElementById('profileName').innerText = username;
+                document.getElementById('popupForm').style.display = 'none';
             } else {
-                fingersCount = 1; // Default to 1 finger if not a touch event
+                alert('Please enter a valid name.');
             }
         }
 
-        // Back Button Functionality
-        function goBack() {
-            window.history.back(); // Navigate to the previous page
+        // Handle Ad Click
+        function handleAdClick(adId, url, earnings) {
+            let lastClicked = localStorage.getItem(adId + '_lastClicked');
+            let now = Date.now();
+
+            // Check if the ad has been clicked within the last 24 hours
+            if (lastClicked && (now - lastClicked < 24 * 60 * 60 * 1000)) {
+                alert('You can only watch this ad once every 24 hours.');
+                return;
+            }
+
+            const adWindow = window.open(url, '_blank');
+            const adStartTime = Date.now();
+
+            const checkAdInterval = setInterval(() => {
+                if (adWindow.closed) {
+                    const elapsedTime = (Date.now() - adStartTime) / 1000; // in seconds
+
+                    if (elapsedTime >= 60) {
+                        // Update balance only if the ad was watched for at least 60 seconds
+                        alert(`You have earned ${earnings} USD!`);
+                        balance += earnings;
+                        localStorage.setItem('balance', balance.toFixed(2));
+                        document.getElementById('balance').innerText = `${balance.toFixed(2)} USD`;
+                        localStorage.setItem(adId + '_lastClicked', now);
+
+                        // Hide the ad for 24 hours after successful earnings
+                        document.getElementById(adId).style.display = 'none';
+                    } else {
+                        alert('You must watch the ad for at least 60 seconds to earn!');
+                    }
+
+                    clearInterval(checkAdInterval);
+                }
+            }, 1000);
         }
+
+        // Load User Info and Ads on Page Load
+        window.onload = function () {
+            const savedName = localStorage.getItem('username');
+            if (savedName) {
+                document.getElementById('profileName').innerText = savedName;
+                document.getElementById('popupForm').style.display = 'none';
+            } else {
+                document.getElementById('popupForm').style.display = 'flex';
+            }
+
+            const savedBalance = parseFloat(localStorage.getItem('balance') || '0.000');
+            document.getElementById('balance').innerText = `${savedBalance.toFixed(2)} USD`;
+
+            // Show ads
+            const adsContainer = document.getElementById('adsContainer');
+            adsContainer.innerHTML = ''; // Clear the container before adding ads
+
+            for (let i = 0; i < totalAds; i++) {
+                const adCard = document.createElement('div');
+                adCard.classList.add('ad-card');
+                adCard.id = `ad${i + 1}`;
+
+                const adContent = document.createElement('p');
+                adContent.innerText = `${adsData[i].title}: ${adsData[i].description}`;
+
+                const adButton = document.createElement('button');
+                adButton.innerText = 'Start';
+                adButton.onclick = function () {
+                    handleAdClick(`ad${i + 1}`, adsData[i].url, adsData[i].earnings);
+                };
+
+                adCard.appendChild(adContent);
+                adCard.appendChild(adButton);
+                adsContainer.appendChild(adCard);
+            }
+
+            // Hide ads if they were watched in the last 24 hours
+            for (let i = 0; i < totalAds; i++) {
+                let adLastClicked = localStorage.getItem(`ad${i + 1}_lastClicked`);
+                let now = Date.now();
+                if (adLastClicked && (now - adLastClicked < 24 * 60 * 60 * 1000)) {
+                    document.getElementById(`ad${i + 1}`).style.display = 'none';
+                }
+            }
+        };
     </script>
 </body>
 </html>
