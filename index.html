@@ -15,6 +15,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            flex-direction: column; /* Added to arrange content vertically */
         }
 
         .container {
@@ -108,6 +109,24 @@
             font-size: 1.5rem;
         }
 
+        /* Back Button */
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -127,6 +146,9 @@
             <p>Tap to Earn</p>
         </footer>
     </div>
+
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">Back</button>
 
     <script>
         // Load Score from localStorage
@@ -189,6 +211,11 @@
             } else {
                 fingersCount = 1; // Default to 1 finger if not a touch event
             }
+        }
+
+        // Back Button Functionality
+        function goBack() {
+            window.history.back(); // Navigate to the previous page
         }
     </script>
 </body>
