@@ -13,16 +13,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Full height to center vertically */
+            height: 100vh;
         }
 
         .container {
             text-align: center;
+            position: relative;
         }
 
         .circle-image {
-            width: 200px; /* Increased size */
-            height: 200px; /* Increased size */
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             background: url('https://via.placeholder.com/200') no-repeat center/cover;
             display: flex;
@@ -31,31 +32,36 @@
             margin: 0 auto;
             position: relative;
             cursor: pointer;
+            transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
         }
 
-        .circle-image:hover {
-            transform: scale(1.1);
+        /* Glow effect */
+        .circle-image.active {
+            box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.8), 0 0 30px 10px rgba(0, 255, 255, 0.7);
+            background-color: rgba(255, 255, 0, 0.5); /* Add temporary color glow */
         }
 
+        /* Scoreboard */
         .score {
             position: absolute;
-            top: -15px;
-            right: -15px;
-            background: #28a745;
+            top: -30px; /* Half-inch above the image */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007bff;
             color: #fff;
             font-size: 1.4rem;
             font-weight: bold;
-            width: 50px;
+            width: 120px;
             height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 50%;
+            border-radius: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
+        /* Heading */
         h2 {
             color: #333;
             font-size: 1.8rem;
@@ -73,13 +79,11 @@
 </head>
 <body>
     <div class="container">
-        <h2>Click to Earn Points</h2>
+        <h2>Tap to Earn MAI</h2>
         <!-- Circle Image -->
         <div class="circle-image" onclick="increaseScore()">
-            <div class="score" id="scoreDisplay">0</div>
+            <div class="score" id="scoreDisplay">0 MAI</div>
         </div>
-        <p>Your total score is saved and will be shown here every time you revisit.</p>
-        <!-- Footer -->
         <footer>
             <p>All rights reserved © 2024</p>
         </footer>
@@ -88,13 +92,31 @@
     <script>
         // Load Score from localStorage
         let score = parseInt(localStorage.getItem('score') || '0');
-        document.getElementById('scoreDisplay').innerText = score;
+        document.getElementById('scoreDisplay').innerText = `${score} MAI`;
 
         // Function to increase score
         function increaseScore() {
-            score += 1; // Increment score by 1
-            document.getElementById('scoreDisplay').innerText = score;
-            localStorage.setItem('score', score); // Save to localStorage
+            const circleImage = document.querySelector('.circle-image');
+
+            // Increment score and update display
+            score += 1;
+            document.getElementById('scoreDisplay').innerText = `${score} MAI`;
+
+            // Save to localStorage
+            localStorage.setItem('score', score);
+
+            // Add active class for glow effect and color change
+            circleImage.classList.add('active');
+
+            // Change color randomly
+            const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+            circleImage.style.backgroundColor = randomColor;
+
+            // Remove active class after a short delay
+            setTimeout(() => {
+                circleImage.classList.remove('active');
+                circleImage.style.backgroundColor = 'transparent'; // Reset color
+            }, 500); // Glow effect lasts 0.5 seconds
         }
     </script>
 </body>
