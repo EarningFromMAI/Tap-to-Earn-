@@ -28,17 +28,23 @@
             top: -80px; /* One inch above the round image */
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(90deg, #007bff, #6a11cb);
-            color: #fff;
+            background: #ffffff; /* White background */
+            color: #333; /* Text color for MAI */
             font-size: 1.5rem;
             font-weight: bold;
-            width: 130px;
+            width: 150px;
             height: 55px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 25px;
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid #ddd;
+        }
+
+        .score span {
+            color: #ffc107; /* Yellow for score number */
+            margin-right: 5px;
         }
 
         /* Circle Image */
@@ -79,7 +85,7 @@
 <body>
     <div class="container">
         <!-- Scoreboard -->
-        <div class="score" id="scoreDisplay">0</div>
+        <div class="score" id="scoreDisplay"><span>0</span> MAI</div>
 
         <!-- Circle Image -->
         <div class="circle-image" onclick="increaseScore()">
@@ -93,7 +99,7 @@
     <script>
         // Load Score from localStorage
         let score = parseInt(localStorage.getItem('score') || '0');
-        document.getElementById('scoreDisplay').innerText = score;
+        document.querySelector('.score span').innerText = score;
 
         // Function to increase score
         function increaseScore() {
@@ -101,7 +107,7 @@
 
             // Increment score and update display
             score += 1;
-            document.getElementById('scoreDisplay').innerText = score;
+            document.querySelector('.score span').innerText = score;
 
             // Save to localStorage
             localStorage.setItem('score', score);
