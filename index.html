@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Scoring System</title>
+    <title>Tap to Earn</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,7 +25,7 @@
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            background: url('https://via.placeholder.com/200') no-repeat center/cover;
+            background: linear-gradient(45deg, #ff6f61, #ffcc00);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -36,10 +36,15 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
+        .circle-image span {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
         /* Glow effect */
         .circle-image.active {
             box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.8), 0 0 30px 10px rgba(0, 255, 255, 0.7);
-            background-color: rgba(255, 255, 0, 0.5); /* Add temporary color glow */
         }
 
         /* Scoreboard */
@@ -61,14 +66,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Heading */
-        h2 {
-            color: #333;
-            font-size: 1.8rem;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         footer {
             text-align: center;
             margin-top: 20px;
@@ -79,20 +76,20 @@
 </head>
 <body>
     <div class="container">
-        <h2>Tap to Earn MAI</h2>
         <!-- Circle Image -->
         <div class="circle-image" onclick="increaseScore()">
-            <div class="score" id="scoreDisplay">0 MAI</div>
+            <span>MAI</span>
+            <div class="score" id="scoreDisplay">0</div>
         </div>
         <footer>
-            <p>All rights reserved © 2024</p>
+            <p>Tap to Earn</p>
         </footer>
     </div>
 
     <script>
         // Load Score from localStorage
         let score = parseInt(localStorage.getItem('score') || '0');
-        document.getElementById('scoreDisplay').innerText = `${score} MAI`;
+        document.getElementById('scoreDisplay').innerText = score;
 
         // Function to increase score
         function increaseScore() {
@@ -100,22 +97,22 @@
 
             // Increment score and update display
             score += 1;
-            document.getElementById('scoreDisplay').innerText = `${score} MAI`;
+            document.getElementById('scoreDisplay').innerText = score;
 
             // Save to localStorage
             localStorage.setItem('score', score);
 
-            // Add active class for glow effect and color change
+            // Add active class for glow effect
             circleImage.classList.add('active');
 
-            // Change color randomly
-            const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-            circleImage.style.backgroundColor = randomColor;
+            // Change to random gradient color
+            const randomColor1 = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+            const randomColor2 = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+            circleImage.style.background = `linear-gradient(45deg, ${randomColor1}, ${randomColor2})`;
 
             // Remove active class after a short delay
             setTimeout(() => {
                 circleImage.classList.remove('active');
-                circleImage.style.backgroundColor = 'transparent'; // Reset color
             }, 500); // Glow effect lasts 0.5 seconds
         }
     </script>
