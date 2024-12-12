@@ -28,23 +28,27 @@
             top: -80px; /* One inch above the round image */
             left: 50%;
             transform: translateX(-50%);
-            background: #ffffff; /* White background */
-            color: #333; /* Text color for MAI */
+            background: #fff8dc; /* Light background for better visibility */
+            color: #333;
             font-size: 1.5rem;
             font-weight: bold;
-            width: 150px;
-            height: 55px;
+            width: 180px;
+            height: 65px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 25px;
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid #ddd;
+            border: 2px solid #ccc;
         }
 
         .score span {
-            color: #ffc107; /* Yellow for score number */
+            color: #ff8c00; /* Unique color for score number */
             margin-right: 5px;
+        }
+
+        .score span.unit {
+            color: #008b8b; /* Color for "MAI" */
         }
 
         /* Circle Image */
@@ -85,12 +89,15 @@
 <body>
     <div class="container">
         <!-- Scoreboard -->
-        <div class="score" id="scoreDisplay"><span>0</span> MAI</div>
+        <div class="score" id="scoreDisplay">
+            <span>0</span><span class="unit">MAI</span>
+        </div>
 
         <!-- Circle Image -->
-        <div class="circle-image" onclick="increaseScore()">
+        <div class="circle-image" onclick="increaseScore(event)">
             <span>MAI</span>
         </div>
+
         <footer>
             <p>Tap to Earn</p>
         </footer>
@@ -101,12 +108,13 @@
         let score = parseInt(localStorage.getItem('score') || '0');
         document.querySelector('.score span').innerText = score;
 
-        // Function to increase score
-        function increaseScore() {
+        // Function to increase score with multi-tap feature
+        function increaseScore(event) {
             const circleImage = document.querySelector('.circle-image');
+            const touches = event.touches ? event.touches.length : 1;
 
-            // Increment score and update display
-            score += 1;
+            // Increase score based on the number of fingers (multi-touch)
+            score += touches;
             document.querySelector('.score span').innerText = score;
 
             // Save to localStorage
@@ -115,9 +123,13 @@
             // Add active class for glow effect
             circleImage.classList.add('active');
 
+            // Add inner touch effect on circle image
+            circleImage.style.background = `radial-gradient(circle, rgba(255,255,255,0.5) ${Math.random()*10}%, rgba(255,255,255,0) ${Math.random()*20}%)`;
+
             // Remove active class after a short delay
             setTimeout(() => {
                 circleImage.classList.remove('active');
+                circleImage.style.background = ''; // Reset background after effect
             }, 500); // Glow effect lasts 0.5 seconds
         }
     </script>
