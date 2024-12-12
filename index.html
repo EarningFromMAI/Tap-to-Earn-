@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Scoring System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .circle-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: url('https://via.placeholder.com/100') no-repeat center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .circle-image:hover {
+            transform: scale(1.1);
+        }
+
+        .score {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #28a745;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Click to Earn Points</h2>
+        <!-- Circle Image -->
+        <div class="circle-image" onclick="increaseScore()">
+            <div class="score" id="scoreDisplay">0</div>
+        </div>
+        <p>Your total score is saved and will be shown here every time you revisit.</p>
+        <!-- Footer -->
+        <footer>
+            <p>All rights reserved © 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        // Load Score from localStorage
+        let score = parseInt(localStorage.getItem('score') || '0');
+        document.getElementById('scoreDisplay').innerText = score;
+
+        // Function to increase score
+        function increaseScore() {
+            score += 1; // Increment score by 1
+            document.getElementById('scoreDisplay').innerText = score;
+            localStorage.setItem('score', score); // Save to localStorage
+        }
+    </script>
+</body>
+</html>
