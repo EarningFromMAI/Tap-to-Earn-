@@ -108,6 +108,13 @@
             font-size: 1.5rem;
         }
 
+        /* Timer Style */
+        .timer {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            color: #ff6347;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -118,9 +125,16 @@
         </div>
 
         <!-- Circle Image -->
-        <div class="circle-image" id="circleImage" onclick="increaseScore()" onpointerdown="addTapEffect()" onpointerup="countFingers(event)">
+        <div class="circle-image" id="circleImage" 
+             onpointerdown="startTimer()" 
+             onpointerup="increaseScore()" 
+             onpointerup="stopTimer()">
             <span>MAI</span>
         </div>
+
+        <!-- Timer Display -->
+        <div class="timer" id="timerDisplay">Time: 60s</div>
+
         <footer>
             <p>Tap to Earn</p>
         </footer>
@@ -131,23 +145,49 @@
         let score = parseInt(localStorage.getItem('score') || '0');
         document.querySelector('#scoreValue').innerText = score;
 
+        let timer = 60; // Timer set to 60 seconds
+        let timerInterval;
         let fingersCount = 0; // To count the number of fingers during a tap
 
+        // Function to start the timer
+        function startTimer() {
+            let timerDisplay = document.querySelector('#timerDisplay');
+            timerInterval = setInterval(function () {
+                if (timer > 0) {
+                    timer--;
+                    timerDisplay.innerText = 'Time: ' + timer + 's';
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        // Function to stop the timer
+        function stopTimer() {
+            clearInterval(timerInterval);
+            if (timer === 0) {
+                score += 1000; // Add 1000 points if the timer reaches 0
+                document.querySelector('#scoreValue').innerText = score;
+                localStorage.setItem('score', score); // Save to localStorage
+                timer = 60; // Reset the timer
+            }
+        }
+
         // Function to increase score
-        function increaseScore() {
+        function increaseScore(event) {
             const circleImage = document.querySelector('.circle-image');
             
             // Add points based on number of fingers
             if (fingersCount === 1) {
-                score += 1; // 1 finger = 1 point
+                score += 5; // 1 finger = 5 points
             } else if (fingersCount === 2) {
-                score += 2; // 2 fingers = 2 points
+                score += 10; // 2 fingers = 10 points
             } else if (fingersCount === 3) {
-                score += 3; // 3 fingers = 3 points
+                score += 15; // 3 fingers = 15 points
             } else if (fingersCount === 4) {
-                score += 4; // 4 fingers = 4 points
+                score += 20; // 4 fingers = 20 points
             } else if (fingersCount >= 5) {
-                score += 5; // 5 or more fingers = 5 points
+                score += 25; // 5 or more fingers = 25 points
             }
 
             // Update score display
