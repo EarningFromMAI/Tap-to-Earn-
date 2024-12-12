@@ -112,7 +112,7 @@
         </div>
 
         <!-- Circle Image -->
-        <div class="circle-image" onclick="increaseScore()" onpointerdown="addTapEffect()">
+        <div class="circle-image" id="circleImage" onclick="increaseScore()" onpointerdown="addTapEffect()">
             <span>MAI</span>
         </div>
         <footer>
@@ -125,15 +125,23 @@
         let score = parseInt(localStorage.getItem('score') || '0');
         document.querySelector('#scoreValue').innerText = score;
 
+        let fingersCount = 0;
+
         // Function to increase score
         function increaseScore() {
             const circleImage = document.querySelector('.circle-image');
-
-            // Check if 5 fingers (fingersCount = 5) are pressed for bonus points
-            if (window.fingersCount === 5) {
-                score += 5; // Add 5 points for 5 fingers
-            } else {
-                score += 1; // Default: 1 point per tap
+            
+            // Add points based on number of fingers
+            if (fingersCount === 1) {
+                score += 1; // 1 finger = 1 point
+            } else if (fingersCount === 2) {
+                score += 2; // 2 fingers = 2 points
+            } else if (fingersCount === 3) {
+                score += 3; // 3 fingers = 3 points
+            } else if (fingersCount === 4) {
+                score += 4; // 4 fingers = 4 points
+            } else if (fingersCount >= 5) {
+                score += 5; // 5 or more fingers = 5 points
             }
 
             // Update score display
@@ -163,10 +171,9 @@
         }
 
         // Detect number of fingers for bonus points
-        let fingersCount = 0;
         document.body.addEventListener('pointerdown', (event) => {
-            fingersCount = event.pointerId ? event.pointerId : 0;
-            window.fingersCount = event.getCoalescedEvents ? event.getCoalescedEvents().length : 1;
+            // Count the number of fingers based on pointer count
+            fingersCount = event.getCoalescedEvents ? event.getCoalescedEvents().length : 1;
         });
 
     </script>
