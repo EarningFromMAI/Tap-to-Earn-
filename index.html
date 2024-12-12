@@ -112,7 +112,7 @@
         </div>
 
         <!-- Circle Image -->
-        <div class="circle-image" id="circleImage" onclick="increaseScore()" onpointerdown="addTapEffect()">
+        <div class="circle-image" id="circleImage" onclick="increaseScore()" onpointerdown="addTapEffect()" onpointerup="countFingers()">
             <span>MAI</span>
         </div>
         <footer>
@@ -125,7 +125,7 @@
         let score = parseInt(localStorage.getItem('score') || '0');
         document.querySelector('#scoreValue').innerText = score;
 
-        let fingersCount = 0;
+        let fingersCount = 0; // To count the number of fingers during a tap
 
         // Function to increase score
         function increaseScore() {
@@ -170,12 +170,10 @@
             }, 500);
         }
 
-        // Detect number of fingers for bonus points
-        document.body.addEventListener('pointerdown', (event) => {
-            // Count the number of fingers based on pointer count
+        // Function to count the number of fingers used during the tap
+        function countFingers(event) {
             fingersCount = event.getCoalescedEvents ? event.getCoalescedEvents().length : 1;
-        });
-
+        }
     </script>
 </body>
 </html>
