@@ -179,7 +179,12 @@
 
         // Function to count the number of fingers used during the tap
         function countFingers(event) {
-            fingersCount = event.getCoalescedEvents ? event.getCoalescedEvents().length : 1;
+            // For touch events, get the number of touch points (fingers used)
+            if (event.touches) {
+                fingersCount = event.touches.length;
+            } else {
+                fingersCount = 1; // Default to 1 finger if not a touch event
+            }
         }
     </script>
 </body>
