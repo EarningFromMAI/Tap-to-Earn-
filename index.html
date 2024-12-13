@@ -137,9 +137,9 @@
 
     <div id="mainPage" class="main-page active">
         <div class="balance-container">
-            <div class="balance"><span id="maiBalance">0.00</span> MAI</div>
-            <div class="balance"><span id="usdBalance">0.00</span> $ USD</div>
-            <div class="balance"><span id="tonBalance">0.00</span> TON</div>
+            <div class="balance"><span id="maiBalance">💰0.00</span>MAI</div>
+            <div class="balance"><span id="usdBalance">$0.000</span>USD</div>
+            <div class="balance"><span id="tonBalance">0.00</span>TON</div>
         </div>
 
         <div class="tap-container">
@@ -159,7 +159,7 @@
             </div>
             <div>
                 <h3>Task 2</h3>
-                <p>Like our Facebook page and earn 2 USD.</p>
+                <p>Like our Facebook page and earn 0.025 USD.</p>
                 <button onclick="completeTask(2)">Complete Task</button>
             </div>
             <div>
@@ -200,10 +200,9 @@
     <script>
         let data = JSON.parse(localStorage.getItem('walletData')) || {
             daysLeft: 200,
-            mai: 0.00,
+            mai: 0,
             usd: 0.00,
             ton: 0.00,
-            trx: 0.00,
             invites: 0,
             refLink: `https://example.com/refer?user=user_${Date.now()}`
         };
@@ -213,7 +212,6 @@
             document.getElementById('daysCountdown').innerText = data.daysLeft;
             document.getElementById('maiBalance').innerText = data.mai.toFixed(2);
             document.getElementById('usdBalance').innerText = data.usd.toFixed(2);
-            document.getElementById('tonBalance').innerText = data.ton.toFixed(2);
             document.getElementById('invitesCount').innerText = data.invites;
             document.getElementById('refLink').value = data.refLink;
         }
