@@ -112,12 +112,40 @@
         .navigation-bar .nav-item:hover {
             color: #00ffcc;
         }
+
+        .task-container {
+            margin-top: 20px;
+            width: 80%;
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .task-container h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #333;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .task-item:hover {
+            background: #444;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="title">Dynamic Wallet</div>
-        <div class="countdown">The wallet will launch in <b>18 Days</b></div>
+        <div class="countdown">The wallet will launch in <b id="daysCountdown">200</b> Days</div>
     </div>
 
     <div class="balance-container">
@@ -144,10 +172,28 @@
     </div>
 
     <div class="hold-container">
-        <div class="circle" onclick="holdToEarn()">
+        <div class="circle" 
+            onpointerdown="handleTap(event)" 
+            onpointerup="releaseTap()">
             <span>Hold to Earn</span>
         </div>
         <div>Hold to get the prize</div>
+    </div>
+
+    <div class="task-container">
+        <h3>Complete Tasks to Earn TRX</h3>
+        <div class="task-item" onclick="completeTask('Facebook Like', 2)">
+            Facebook Like - Earn 2 TRX
+        </div>
+        <div class="task-item" onclick="completeTask('YouTube Watch', 3)">
+            YouTube Watch - Earn 3 TRX
+        </div>
+        <div class="task-item" onclick="completeTask('App Download', 5)">
+            App Download - Earn 5 TRX
+        </div>
+        <div class="task-item" onclick="completeTask('Ad View', 1)">
+            Ad View - Earn 1 TRX
+        </div>
     </div>
 
     <div class="navigation-bar">
@@ -174,27 +220,41 @@
     </div>
 
     <script>
+        // Countdown Logic
+        let daysLeft = 200;
+        setInterval(() => {
+            if (daysLeft > 0) {
+                daysLeft -= 1;
+                document.getElementById('daysCountdown').innerText = daysLeft;
+            }
+        }, 24 * 60 * 60 * 1000); // Update every 24 hours
+
         // Balance Variables
         let totalBalance = 0.00;
         let usdt = 0.00;
         let trx = 0.00;
         let ton = 0.00;
-        let invites = 0;
 
-        // Hold to Earn Functionality
-        function holdToEarn() {
-            usdt += 1.50; // Example: Add 1.50 USDT on hold
-            totalBalance += 1.50;
+        let fingersCount = 0; // To count the number of fingers during a tap
 
-            // Update Balances
-            updateDisplay();
-            alert('You earned 1.50 USDT!');
+        // Tap Logic
+        function handleTap(event) {
+            fingersCount = event.touches ? event.touches.length : 1;
         }
 
-        // Function to Navigate to Different Sections
-        function navigateTo(section) {
-            alert('Navigating to ' + section);
-            // Implement further navigation logic here
+        function releaseTap() {
+            const points = Math.min(fingersCount, 5); // Max 5 points
+            usdt += points;
+            totalBalance += points;
+            updateDisplay();
+        }
+
+        // Complete Task
+        function completeTask(taskName, trxPoints) {
+            trx += trxPoints;
+            totalBalance += trxPoints;
+            updateDisplay();
+            alert(`You completed ${taskName} and earned ${trxPoints} TRX!`);
         }
 
         // Update Display
@@ -203,7 +263,11 @@
             document.getElementById('usdtBalance').innerText = usdt.toFixed(2);
             document.getElementById('trxBalance').innerText = trx.toFixed(2);
             document.getElementById('tonBalance').innerText = ton.toFixed(2);
-            document.getElementById('invitesCount').innerText = invites;
+        }
+
+        // Navigation Placeholder
+        function navigateTo(section) {
+            alert(`Navigating to ${section}`);
         }
     </script>
 </body>
