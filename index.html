@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet System</title>
+    <title>Dynamic Wallet System</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000; /* Black background for sleek look */
-            color: #fff; /* White text for contrast */
+            background-color: #000; /* Black background */
+            color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -32,7 +32,7 @@
 
         .header .countdown {
             font-size: 1rem;
-            color: #00ff00; /* Green countdown text */
+            color: #00ff00;
         }
 
         .balance-container {
@@ -43,7 +43,7 @@
         .balance-container .balance {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #00ff00; /* Green balance text */
+            color: #00ff00;
         }
 
         .wallet-info {
@@ -110,35 +110,35 @@
         }
 
         .navigation-bar .nav-item:hover {
-            color: #00ffcc; /* Highlight color on hover */
+            color: #00ffcc;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="title">TronKeeper</div>
+        <div class="title">Dynamic Wallet</div>
         <div class="countdown">The wallet will launch in <b>18 Days</b></div>
     </div>
 
     <div class="balance-container">
-        <div class="balance">$162.07</div>
+        <div class="balance">$<span id="totalBalance">0.00</span></div>
     </div>
 
     <div class="wallet-info">
         <div>
-            <div class="value">158.35</div>
+            <div class="value" id="usdtBalance">0.00</div>
             <div>USDT</div>
         </div>
         <div>
-            <div class="value">0</div>
+            <div class="value" id="trxBalance">0.00</div>
             <div>TRX</div>
         </div>
         <div>
-            <div class="value">0.6</div>
+            <div class="value" id="tonBalance">0.00</div>
             <div>TON</div>
         </div>
         <div>
-            <div class="value">49</div>
+            <div class="value" id="invitesCount">0</div>
             <div>Invites</div>
         </div>
     </div>
@@ -151,32 +151,59 @@
     </div>
 
     <div class="navigation-bar">
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" onclick="navigateTo('home')">
             <i class="home-icon">🏠</i>
             Home
         </a>
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" onclick="navigateTo('task')">
             <i class="task-icon">📝</i>
             Task
         </a>
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" onclick="navigateTo('withdraw')">
             <i class="withdraw-icon">💰</i>
             Withdraw
         </a>
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" onclick="navigateTo('refer')">
             <i class="refer-icon">🔗</i>
             Refer
         </a>
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" onclick="navigateTo('help')">
             <i class="help-icon">❓</i>
             Help
         </a>
     </div>
 
     <script>
+        // Balance Variables
+        let totalBalance = 0.00;
+        let usdt = 0.00;
+        let trx = 0.00;
+        let ton = 0.00;
+        let invites = 0;
+
+        // Hold to Earn Functionality
         function holdToEarn() {
-            alert("Holding to earn rewards!");
-            // Implement reward logic here
+            usdt += 1.50; // Example: Add 1.50 USDT on hold
+            totalBalance += 1.50;
+
+            // Update Balances
+            updateDisplay();
+            alert('You earned 1.50 USDT!');
+        }
+
+        // Function to Navigate to Different Sections
+        function navigateTo(section) {
+            alert('Navigating to ' + section);
+            // Implement further navigation logic here
+        }
+
+        // Update Display
+        function updateDisplay() {
+            document.getElementById('totalBalance').innerText = totalBalance.toFixed(2);
+            document.getElementById('usdtBalance').innerText = usdt.toFixed(2);
+            document.getElementById('trxBalance').innerText = trx.toFixed(2);
+            document.getElementById('tonBalance').innerText = ton.toFixed(2);
+            document.getElementById('invitesCount').innerText = invites;
         }
     </script>
 </body>
