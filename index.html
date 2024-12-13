@@ -137,9 +137,9 @@
 
     <div id="mainPage" class="main-page active">
         <div class="balance-container">
-            <div class="balance"><span id="maiBalance">💰0.00</span>MAI</div>
-            <div class="balance"><span id="usdBalance">$0.000</span>USD</div>
-            <div class="balance"><span id="tonBalance">0.00</span>TON</div>
+            <div class="balance"><span id="maiBalance">💰0.00</span> MAI</div>
+            <div class="balance"><span id="usdBalance">$0.000</span> USD</div>
+            <div class="balance"><span id="tonBalance">0.00</span> TON</div>
         </div>
 
         <div class="tap-container">
@@ -201,8 +201,7 @@
         let data = JSON.parse(localStorage.getItem('walletData')) || {
             daysLeft: 200,
             mai: 0,
-            usd: 0.00,
-            ton: 0.00,
+            usd: 0.000,
             invites: 0,
             refLink: `https://example.com/refer?user=user_${Date.now()}`
         };
