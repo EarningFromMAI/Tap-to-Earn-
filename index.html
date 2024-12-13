@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet System</title>
+    <title>Dynamic Wallet</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,20 +30,15 @@
             color: #00ff00;
         }
 
-        .balance-container {
+        .main-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             margin-top: 20px;
-            text-align: center;
         }
 
-        .balance-container .balance {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #00ff00;
-        }
-
-        .tap-container {
-            margin-top: 50px;
-            text-align: center;
+        .main-page.active {
+            display: flex;
         }
 
         .tap-container .circle {
@@ -64,20 +59,29 @@
             color: #fff;
         }
 
-        .wallet-info {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            gap: 20px;
-        }
-
-        .wallet-info div {
+        .task-page, .refer-page {
+            display: none;
+            margin-top: 20px;
             text-align: center;
         }
 
-        .wallet-info .value {
-            font-size: 1.5rem;
-            font-weight: bold;
+        .task-page.active, .refer-page.active {
+            display: block;
+        }
+
+        .task-list, .refer-info {
+            margin-top: 20px;
+            background-color: #111;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .task-list div, .refer-info div {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 5px;
         }
 
         .navigation-bar {
@@ -104,7 +108,7 @@
             margin-bottom: 5px;
         }
 
-        .navigation-bar .nav-item:hover {
+        .navigation-bar .nav-item.active {
             color: #00ffcc;
         }
     </style>
@@ -114,105 +118,124 @@
         <div class="countdown">The wallet will launch in <b id="daysCountdown">200</b> Days</div>
     </div>
 
-    <div class="balance-container">
-        <div class="balance"><span id="totalBalance">0.00</span> MAI</div>
+    <div id="mainPage" class="main-page active">
+        <div class="balance-container">
+            <div class="balance"><span id="maiBalance">0.00</span> MAI</div>
+        </div>
+
+        <div class="tap-container">
+            <div class="circle" onpointerdown="handleTap(event)">
+                <span>Tap</span>
+            </div>
+        </div>
     </div>
 
-    <div class="tap-container">
-        <div class="circle" onpointerdown="handleTap(event)">
-            <span>Tap</span>
+    <div id="taskPage" class="task-page">
+        <h2>Complete Tasks to Earn TRX</h2>
+        <div class="task-list">
+            <div>
+                <h3>Task 1</h3>
+                <p>Watch a video and earn 1 TRX.</p>
+                <button onclick="completeTask(1)">Complete Task</button>
+            </div>
+            <div>
+                <h3>Task 2</h3>
+                <p>Like our Facebook page and earn 2 TRX.</p>
+                <button onclick="completeTask(2)">Complete Task</button>
+            </div>
+            <div>
+                <h3>Task 3</h3>
+                <p>Download our app and earn 3 TRX.</p>
+                <button onclick="completeTask(3)">Complete Task</button>
+            </div>
         </div>
     </div>
 
-    <div class="wallet-info">
-        <div>
-            <div class="value" id="maiBalance">0.00 MAI</div>
-            <div>MAI</div>
+    <div id="referPage" class="refer-page">
+        <h2>Your Referral Link</h2>
+        <div class="refer-info">
+            <div>
+                <p>Share this link to invite friends:</p>
+                <input type="text" id="refLink" readonly>
+                <button onclick="copyLink()">Copy Link</button>
+            </div>
         </div>
-        <div>
-            <div class="value" id="trxBalance">0.00 TRX</div>
-            <div>TRX</div>
-        </div>
-        <div>
-            <div class="value" id="invitesCount">0</div>
-            <div>Invites</div>
-        </div>
+        <p>Total Invites: <b id="invitesCount">0</b></p>
     </div>
 
     <div class="navigation-bar">
-        <a href="#" class="nav-item" onclick="navigateTo('home')">
-            <i class="home-icon">🏠</i>
+        <a href="#" class="nav-item active" id="homeNav" onclick="navigateTo('home')">
+            <i>🏠</i>
             Home
         </a>
-        <a href="#" class="nav-item" onclick="navigateTo('task')">
-            <i class="task-icon">📝</i>
+        <a href="#" class="nav-item" id="taskNav" onclick="navigateTo('task')">
+            <i>📝</i>
             Task
         </a>
-        <a href="#" class="nav-item" onclick="navigateTo('refer')">
-            <i class="refer-icon">🔗</i>
+        <a href="#" class="nav-item" id="referNav" onclick="navigateTo('refer')">
+            <i>🔗</i>
             Refer
-        </a>
-        <a href="#" class="nav-item" onclick="navigateTo('help')">
-            <i class="help-icon">❓</i>
-            Help
         </a>
     </div>
 
     <script>
-        // Local storage initialization
-        let userId = localStorage.getItem('userId') || `user_${Date.now()}`;
-        localStorage.setItem('userId', userId);
-
         let data = JSON.parse(localStorage.getItem('walletData')) || {
             daysLeft: 200,
             mai: 0.00,
             trx: 0.00,
             invites: 0,
-            refLink: `https://example.com/refer?user=${userId}`
+            refLink: `https://example.com/refer?user=user_${Date.now()}`
         };
 
-        // Update UI from local storage
+        // Update UI
         function updateUI() {
             document.getElementById('daysCountdown').innerText = data.daysLeft;
-            document.getElementById('totalBalance').innerText = data.mai.toFixed(2);
-            document.getElementById('maiBalance').innerText = `${data.mai.toFixed(2)} MAI`;
-            document.getElementById('trxBalance').innerText = `${data.trx.toFixed(2)} TRX`;
+            document.getElementById('maiBalance').innerText = data.mai.toFixed(2);
             document.getElementById('invitesCount').innerText = data.invites;
+            document.getElementById('refLink').value = data.refLink;
         }
         updateUI();
 
-        // Countdown Logic
-        setInterval(() => {
-            if (data.daysLeft > 0) {
-                data.daysLeft -= 1;
-                localStorage.setItem('walletData', JSON.stringify(data));
-                updateUI();
-            }
-        }, 24 * 60 * 60 * 1000); // 24 hours
+        // Navigation
+        function navigateTo(page) {
+            document.querySelector('.main-page').classList.remove('active');
+            document.querySelector('.task-page').classList.remove('active');
+            document.querySelector('.refer-page').classList.remove('active');
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
 
-        // Tap to Earn Logic
+            if (page === 'home') {
+                document.getElementById('mainPage').classList.add('active');
+                document.getElementById('homeNav').classList.add('active');
+            } else if (page === 'task') {
+                document.getElementById('taskPage').classList.add('active');
+                document.getElementById('taskNav').classList.add('active');
+            } else if (page === 'refer') {
+                document.getElementById('referPage').classList.add('active');
+                document.getElementById('referNav').classList.add('active');
+            }
+        }
+
+        // Tap to Earn MAI
         function handleTap(event) {
-            const fingersCount = event.touches ? event.touches.length : 1;
-            const points = Math.min(fingersCount, 5);
+            const points = Math.min(event.touches ? event.touches.length : 1, 5);
             data.mai += points;
             localStorage.setItem('walletData', JSON.stringify(data));
             updateUI();
         }
 
-        // Navigate
-        function navigateTo(page) {
-            if (page === 'task') {
-                alert("Task 1: Watch a video\nTask 2: Like a Facebook page\nTask 3: Download an app.");
-                const trxReward = 2;
-                data.trx += trxReward;
-                localStorage.setItem('walletData', JSON.stringify(data));
-                updateUI();
-                alert(`Task Completed! You earned ${trxReward} TRX.`);
-            } else if (page === 'refer') {
-                alert(`Your referral link: ${data.refLink}`);
-            } else {
-                alert(`Opening ${page} Page...`);
-            }
+        // Complete Task
+        function completeTask(points) {
+            data.trx += points;
+            localStorage.setItem('walletData', JSON.stringify(data));
+            alert(`Task Completed! You earned ${points} TRX.`);
+        }
+
+        // Copy Referral Link
+        function copyLink() {
+            const link = document.getElementById('refLink');
+            link.select();
+            navigator.clipboard.writeText(link.value);
+            alert("Link copied to clipboard!");
         }
     </script>
 </body>
