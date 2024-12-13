@@ -41,6 +41,29 @@
             color: #00ff00;
         }
 
+        .tap-container {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .tap-container .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ffcc, #0099ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .tap-container .circle span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
         .wallet-info {
             display: flex;
             justify-content: center;
@@ -55,29 +78,6 @@
         .wallet-info .value {
             font-size: 1.5rem;
             font-weight: bold;
-        }
-
-        .tap-container {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .tap-container .circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00ffcc, #0099ff);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            cursor: pointer;
-        }
-
-        .tap-container .circle span {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
         }
 
         .navigation-bar {
@@ -118,6 +118,12 @@
         <div class="balance"><span id="totalBalance">0.00</span> MAI</div>
     </div>
 
+    <div class="tap-container">
+        <div class="circle" onpointerdown="handleTap(event)">
+            <span>Tap</span>
+        </div>
+    </div>
+
     <div class="wallet-info">
         <div>
             <div class="value" id="maiBalance">0.00 MAI</div>
@@ -128,20 +134,9 @@
             <div>TRX</div>
         </div>
         <div>
-            <div class="value" id="tonBalance">0.00 TON</div>
-            <div>TON</div>
-        </div>
-        <div>
             <div class="value" id="invitesCount">0</div>
             <div>Invites</div>
         </div>
-    </div>
-
-    <div class="tap-container">
-        <div class="circle" onpointerdown="handleTap(event)">
-            <span>Tap to Earn</span>
-        </div>
-        <div>Tap with fingers to get points</div>
     </div>
 
     <div class="navigation-bar">
@@ -165,12 +160,15 @@
 
     <script>
         // Local storage initialization
+        let userId = localStorage.getItem('userId') || `user_${Date.now()}`;
+        localStorage.setItem('userId', userId);
+
         let data = JSON.parse(localStorage.getItem('walletData')) || {
             daysLeft: 200,
             mai: 0.00,
             trx: 0.00,
-            ton: 0.00,
-            invites: 0
+            invites: 0,
+            refLink: `https://example.com/refer?user=${userId}`
         };
 
         // Update UI from local storage
@@ -179,7 +177,6 @@
             document.getElementById('totalBalance').innerText = data.mai.toFixed(2);
             document.getElementById('maiBalance').innerText = `${data.mai.toFixed(2)} MAI`;
             document.getElementById('trxBalance').innerText = `${data.trx.toFixed(2)} TRX`;
-            document.getElementById('tonBalance').innerText = `${data.ton.toFixed(2)} TON`;
             document.getElementById('invitesCount').innerText = data.invites;
         }
         updateUI();
@@ -205,19 +202,14 @@
         // Navigate
         function navigateTo(page) {
             if (page === 'task') {
-                const trxReward = 2; // প্রতি টাস্কে 2 TRX পুরস্কার
+                alert("Task 1: Watch a video\nTask 2: Like a Facebook page\nTask 3: Download an app.");
+                const trxReward = 2;
                 data.trx += trxReward;
                 localStorage.setItem('walletData', JSON.stringify(data));
                 updateUI();
                 alert(`Task Completed! You earned ${trxReward} TRX.`);
             } else if (page === 'refer') {
-                const referCode = prompt('Enter Refer Code:');
-                if (referCode) {
-                    data.invites += 1;
-                    localStorage.setItem('walletData', JSON.stringify(data));
-                    updateUI();
-                    alert('Refer Successful!');
-                }
+                alert(`Your referral link: ${data.refLink}`);
             } else {
                 alert(`Opening ${page} Page...`);
             }
