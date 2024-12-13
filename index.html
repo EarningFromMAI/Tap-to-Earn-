@@ -3,230 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tap to Earn</title>
+    <title>Wallet System</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            background-color: #000; /* Black background for sleek look */
+            color: #fff; /* White text for contrast */
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
         }
 
-        .container {
-            text-align: center;
-            position: relative;
-        }
-
-        /* Scoreboard */
-        .score {
-            position: absolute;
-            top: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff;
-            color: #333;
-            font-size: 1.5rem;
-            font-weight: bold;
-            width: 180px;
-            height: 60px;
+        .header {
+            width: 100%;
+            padding: 10px;
+            background-color: #111;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            border-radius: 25px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid #ddd;
         }
 
-        .score span {
-            color: #ffd700;
-            margin-right: 5px;
-        }
-
-        .currency-symbol {
+        .header .title {
             font-size: 1.2rem;
-            color: #00bcd4;
+            font-weight: bold;
         }
 
-        /* Circle Image */
-        .circle-image {
-            width: 220px;
-            height: 220px;
+        .header .countdown {
+            font-size: 1rem;
+            color: #00ff00; /* Green countdown text */
+        }
+
+        .balance-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .balance-container .balance {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ff00; /* Green balance text */
+        }
+
+        .wallet-info {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 20px;
+        }
+
+        .wallet-info div {
+            text-align: center;
+        }
+
+        .wallet-info .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .hold-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .hold-container .circle {
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            background: radial-gradient(circle, #ff7e5f, #feb47b, #fdffba);
+            background: linear-gradient(135deg, #00ffcc, #0099ff);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), inset 0 -5px 10px rgba(255, 255, 255, 0.4);
         }
 
-        .circle-image span {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: #b9f2ff;
-            text-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
-        }
-
-        .circle-image.active {
-            box-shadow: 0 0 50px 15px rgba(255, 255, 0, 0.8), 0 0 60px 20px rgba(0, 255, 255, 0.7);
-        }
-
-        .circle-image.tap-effect {
-            animation: tapEffect 0.5s ease-out;
-        }
-
-        @keyframes tapEffect {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(0.95);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Diamond Color */
-        .diamond {
-            color: #b9f2ff;
-            font-size: 1.5rem;
-        }
-
-        /* Back Button */
-        .back-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
+        .hold-container .circle span {
+            font-size: 1.2rem;
             font-weight: bold;
             color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
         }
 
-        .back-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Navigation Buttons */
-        .navigation-buttons {
-            position: absolute;
-            bottom: 20px;
+        .navigation-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #111;
             display: flex;
             justify-content: space-around;
-            width: 100%;
-            max-width: 500px;
+            padding: 10px 0;
         }
 
-        .navigation-buttons button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
+        .navigation-bar .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            flex: 1;
-            margin: 0 5px;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            font-size: 0.8rem;
         }
 
-        .navigation-buttons button:hover {
-            background-color: #0056b3;
+        .navigation-bar .nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .navigation-bar .nav-item:hover {
+            color: #00ffcc; /* Highlight color on hover */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Scoreboard -->
-        <div class="score" id="scoreDisplay">
-            <span class="currency-symbol diamond">💎</span><span id="scoreValue">0</span> MAI
-        </div>
-
-        <!-- Circle Image -->
-        <div class="circle-image" id="circleImage" 
-             onpointerdown="addTapEffect(event)" 
-             onpointerup="countFingers(event)">
-            <span>MAI</span>
-        </div>
-        <footer>
-            <p>Tap to Earn</p>
-        </footer>
+    <div class="header">
+        <div class="title">TronKeeper</div>
+        <div class="countdown">The wallet will launch in <b>18 Days</b></div>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="navigation-buttons">
-        <button onclick="navigateTo('home')">Home</button>
-        <button onclick="navigateTo('task')">Task</button>
-        <button onclick="navigateTo('withdraw')">Withdraw</button>
-        <button onclick="navigateTo('refer')">Refer</button>
-        <button onclick="navigateTo('help')">Help</button>
+    <div class="balance-container">
+        <div class="balance">$162.07</div>
+    </div>
+
+    <div class="wallet-info">
+        <div>
+            <div class="value">158.35</div>
+            <div>USDT</div>
+        </div>
+        <div>
+            <div class="value">0</div>
+            <div>TRX</div>
+        </div>
+        <div>
+            <div class="value">0.6</div>
+            <div>TON</div>
+        </div>
+        <div>
+            <div class="value">49</div>
+            <div>Invites</div>
+        </div>
+    </div>
+
+    <div class="hold-container">
+        <div class="circle" onclick="holdToEarn()">
+            <span>Hold to Earn</span>
+        </div>
+        <div>Hold to get the prize</div>
+    </div>
+
+    <div class="navigation-bar">
+        <a href="#" class="nav-item">
+            <i class="home-icon">🏠</i>
+            Home
+        </a>
+        <a href="#" class="nav-item">
+            <i class="task-icon">📝</i>
+            Task
+        </a>
+        <a href="#" class="nav-item">
+            <i class="withdraw-icon">💰</i>
+            Withdraw
+        </a>
+        <a href="#" class="nav-item">
+            <i class="refer-icon">🔗</i>
+            Refer
+        </a>
+        <a href="#" class="nav-item">
+            <i class="help-icon">❓</i>
+            Help
+        </a>
     </div>
 
     <script>
-        // Load Score from localStorage
-        let score = parseInt(localStorage.getItem('score') || '0');
-        document.querySelector('#scoreValue').innerText = score;
-
-        let fingersCount = 0;
-
-        // Function to increase score based on number of fingers
-        function increaseScore() {
-            const circleImage = document.querySelector('.circle-image');
-
-            if (fingersCount === 1) score += 1;
-            else if (fingersCount === 2) score += 2;
-            else if (fingersCount === 3) score += 3;
-            else if (fingersCount === 4) score += 4;
-            else if (fingersCount >= 5) score += 5;
-
-            document.querySelector('#scoreValue').innerText = score;
-            localStorage.setItem('score', score);
-
-            circleImage.classList.add('active');
-            setTimeout(() => {
-                circleImage.classList.remove('active');
-            }, 500);
-        }
-
-        function addTapEffect(event) {
-            const circleImage = document.querySelector('.circle-image');
-            circleImage.classList.add('tap-effect');
-            setTimeout(() => {
-                circleImage.classList.remove('tap-effect');
-            }, 500);
-
-            increaseScore();
-        }
-
-        function countFingers(event) {
-            fingersCount = event.touches ? event.touches.length : 1;
-        }
-
-        function navigateTo(page) {
-            alert(`Navigating to ${page}`); // Replace with actual navigation logic
+        function holdToEarn() {
+            alert("Holding to earn rewards!");
+            // Implement reward logic here
         }
     </script>
 </body>
