@@ -3,270 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Wallet</title>
+    <title>Tap to Earn</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: #f0f8ff;
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header {
-            width: 100%;
-            padding: 10px;
-            background-color: #111;
-            display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column; /* Added to arrange content vertically */
         }
 
-        .header .countdown {
-            font-size: 1rem;
-            color: #00ff00;
-        }
-
-        .main-page {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .main-page.active {
-            display: flex;
-        }
-
-        .balance-container {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            width: 60%;
-            font-size: 1.2rem;
-        }
-
-        .balance {
-            background-color: #222;
-            padding: 10px;
-            border-radius: 5px;
-            width: 30%;
+        .container {
             text-align: center;
+            position: relative;
         }
 
-        .tap-container .circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00ffcc, #0099ff);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            cursor: pointer;
-            margin-top: 20px; /* Move the circle 1 inch lower */
-        }
-
-        .tap-container .circle span {
+        /* Scoreboard */
+        .score {
+            position: absolute;
+            top: -80px; /* One inch above the round image */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff; /* White background */
+            color: #333; /* Text color for MAI */
             font-size: 1.5rem;
             font-weight: bold;
-            color: #fff;
-        }
-
-        .task-page, .refer-page {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .task-page.active, .refer-page.active {
-            display: block;
-        }
-
-        .task-list, .refer-info {
-            margin-top: 20px;
-            background-color: #111;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .task-list div, .refer-info div {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #222;
-            border-radius: 5px;
-        }
-
-        .navigation-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #111;
+            width: 180px;
+            height: 60px;
             display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-
-        .navigation-bar .nav-item {
-            display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.8rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid #ddd;
         }
 
-        .navigation-bar .nav-item i {
+        .score span {
+            color: #ffd700; /* Golden yellow for score number */
+            margin-right: 5px;
+        }
+
+        .currency-symbol {
+            font-size: 1.2rem;
+            color: #00bcd4;
+        }
+
+        /* Circle Image */
+        .circle-image {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff7e5f, #feb47b, #fdffba);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), inset 0 -5px 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .circle-image span {
+            font-size: 3.5rem; /* Larger MAI text */
+            font-weight: bold;
+            color: #b9f2ff; /* Hira color */
+            text-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .circle-image.active {
+            box-shadow: 0 0 50px 15px rgba(255, 255, 0, 0.8), 0 0 60px 20px rgba(0, 255, 255, 0.7);
+        }
+
+        .circle-image.tap-effect {
+            animation: tapEffect 0.5s ease-out;
+        }
+
+        @keyframes tapEffect {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Diamond Color */
+        .diamond {
+            color: #b9f2ff; /* Diamond color */
             font-size: 1.5rem;
-            margin-bottom: 5px;
         }
 
-        .navigation-bar .nav-item.active {
-            color: #00ffcc;
+        /* Back Button */
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="countdown">The wallet will launch in <b id="daysCountdown">200</b> Days</div>
-    </div>
-
-    <div id="mainPage" class="main-page active">
-        <div class="balance-container">
-            <div class="balance"><span id="maiBalance">💰0.00</span> MAI</div>
-            <div class="balance"><span id="usdBalance">$0.000</span> USD</div>
-            <div class="balance"><span id="tonBalance">0.00</span> TON</div>
+    <div class="container">
+        <!-- Scoreboard -->
+        <div class="score" id="scoreDisplay">
+            <span class="currency-symbol diamond">💎</span><span id="scoreValue">0</span> MAI
         </div>
 
-        <div class="tap-container">
-            <div class="circle" onpointerdown="handleTap(event)">
-                <span>Tap</span>
-            </div>
+        <!-- Circle Image -->
+        <div class="circle-image" id="circleImage" 
+             onpointerdown="addTapEffect(event)" 
+             onpointerup="countFingers(event)">
+            <span>MAI</span>
         </div>
+        <footer>
+            <p>Tap to Earn</p>
+        </footer>
     </div>
 
-    <div id="taskPage" class="task-page">
-        <h2>Complete Tasks to Earn USD</h2>
-        <div class="task-list">
-            <div>
-                <h3>Task 1</h3>
-                <p>Watch a video and earn 1 USD.</p>
-                <button onclick="completeTask(1)">Complete Task</button>
-            </div>
-            <div>
-                <h3>Task 2</h3>
-                <p>Like our Facebook page and earn 0.025 USD.</p>
-                <button onclick="completeTask(0.25)">Complete Task</button>
-            </div>
-            <div>
-                <h3>Task 3</h3>
-                <p>Download our app and earn 3 USD.</p>
-                <button onclick="completeTask(3)">Complete Task</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="referPage" class="refer-page">
-        <h2>Your Referral Link</h2>
-        <div class="refer-info">
-            <div>
-                <p>Share this link to invite friends:</p>
-                <input type="text" id="refLink" readonly>
-                <button onclick="copyLink()">Copy Link</button>
-            </div>
-        </div>
-        <p>Total Invites: <b id="invitesCount">0</b></p>
-    </div>
-
-    <div class="navigation-bar">
-        <a href="#" class="nav-item active" id="homeNav" onclick="navigateTo('home')">
-            <i>🏠</i>
-            Home
-        </a>
-        <a href="#" class="nav-item" id="taskNav" onclick="navigateTo('task')">
-            <i>📝</i>
-            Task
-        </a>
-        <a href="#" class="nav-item" id="referNav" onclick="navigateTo('refer')">
-            <i>🔗</i>
-            Refer
-        </a>
-    </div>
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">Back</button>
 
     <script>
-        let data = JSON.parse(localStorage.getItem('walletData')) || {
-            daysLeft: 200,
-            mai: 0,
-            usd: 0.000,
-            invites: 0,
-            refLink: `https://earningfrommai.github.io/Tap-to-Earn-//refer?user=user_${Date.now()}`
-        };
+        // Load Score from localStorage
+        let score = parseInt(localStorage.getItem('score') || '0');
+        document.querySelector('#scoreValue').innerText = score;
 
-        // Update UI
-        function updateUI() {
-            document.getElementById('daysCountdown').innerText = data.daysLeft;
-            document.getElementById('maiBalance').innerText = data.mai.toFixed(2);
-            document.getElementById('usdBalance').innerText = data.usd.toFixed(2);
-            document.getElementById('invitesCount').innerText = data.invites;
-            document.getElementById('refLink').value = data.refLink;
+        let fingersCount = 0; // To count the number of fingers during a tap
+
+        // Function to increase score based on number of fingers
+        function increaseScore() {
+            const circleImage = document.querySelector('.circle-image');
+
+            // Add points based on number of fingers
+            if (fingersCount === 1) {
+                score += 1; // 1 finger = 1 point
+            } else if (fingersCount === 2) {
+                score += 2; // 2 fingers = 2 points
+            } else if (fingersCount === 3) {
+                score += 3; // 3 fingers = 3 points
+            } else if (fingersCount === 4) {
+                score += 4; // 4 fingers = 4 points
+            } else if (fingersCount >= 5) {
+                score += 5; // 5 or more fingers = 5 points
+            }
+
+            // Update score display
+            document.querySelector('#scoreValue').innerText = score;
+
+            // Save to localStorage
+            localStorage.setItem('score', score);
+
+            // Add active class for glow effect
+            circleImage.classList.add('active');
+
+            // Remove active class after a short delay
+            setTimeout(() => {
+                circleImage.classList.remove('active');
+            }, 500); // Glow effect lasts 0.5 seconds
         }
-        updateUI();
 
-        // Navigation
-        function navigateTo(page) {
-            document.querySelector('.main-page').classList.remove('active');
-            document.querySelector('.task-page').classList.remove('active');
-            document.querySelector('.refer-page').classList.remove('active');
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        // Function to handle tap effect (show animation when tapping)
+        function addTapEffect(event) {
+            const circleImage = document.querySelector('.circle-image');
+            circleImage.classList.add('tap-effect');
 
-            if (page === 'home') {
-                document.getElementById('mainPage').classList.add('active');
-                document.getElementById('homeNav').classList.add('active');
-            } else if (page === 'task') {
-                document.getElementById('taskPage').classList.add('active');
-                document.getElementById('taskNav').classList.add('active');
-            } else if (page === 'refer') {
-                document.getElementById('referPage').classList.add('active');
-                document.getElementById('referNav').classList.add('active');
+            // Remove effect after animation
+            setTimeout(() => {
+                circleImage.classList.remove('tap-effect');
+            }, 500);
+
+            // Call increaseScore when tapping
+            increaseScore();
+        }
+
+        // Function to count the number of fingers used during the tap
+        function countFingers(event) {
+            // For touch events, get the number of touch points (fingers used)
+            if (event.touches) {
+                fingersCount = event.touches.length;
+            } else {
+                fingersCount = 1; // Default to 1 finger if not a touch event
             }
         }
 
-        // Tap to Earn MAI
-        function handleTap(event) {
-            const points = Math.min(event.touches ? event.touches.length : 1, 5);
-            data.mai += points;
-            localStorage.setItem('walletData', JSON.stringify(data));
-            updateUI();
-        }
-
-        // Complete Task and Earn USD
-        function completeTask(points) {
-            data.usd += points; // Adding the points to USD balance
-            localStorage.setItem('walletData', JSON.stringify(data));
-            alert(`Task Completed! You earned ${points} USD.`);
-            updateUI();
-        }
-
-        // Copy Referral Link
-        function copyLink() {
-            const link = document.getElementById('refLink');
-            link.select();
-            navigator.clipboard.writeText(link.value);
-            alert("Link copied to clipboard!");
-        }
-
-        // Handle Referral Invites and Earn TON
-        function handleReferral() {
-            data.invites += 1; // For each referral
-            if (data.invites % 10 === 0) {
-                data.ton += 0.5; // For every 10 referrals, add 0.5 TON
-            }
-            localStorage.setItem('walletData', JSON.stringify(data));
-            updateUI();
+        // Back Button Functionality
+        function goBack() {
+            window.history.back(); // Navigate to the previous page
         }
     </script>
 </body>
