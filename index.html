@@ -67,7 +67,7 @@
             align-items: center;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
             cursor: pointer;
-            margin-top: -50px;
+            margin-top: 20px; /* Move the circle 1 inch lower */
         }
 
         .tap-container .circle span {
@@ -150,21 +150,21 @@
     </div>
 
     <div id="taskPage" class="task-page">
-        <h2>Complete Tasks to Earn TRX</h2>
+        <h2>Complete Tasks to Earn USD</h2>
         <div class="task-list">
             <div>
                 <h3>Task 1</h3>
-                <p>Watch a video and earn 1 TRX.</p>
+                <p>Watch a video and earn 1 USD.</p>
                 <button onclick="completeTask(1)">Complete Task</button>
             </div>
             <div>
                 <h3>Task 2</h3>
-                <p>Like our Facebook page and earn 2 TRX.</p>
+                <p>Like our Facebook page and earn 2 USD.</p>
                 <button onclick="completeTask(2)">Complete Task</button>
             </div>
             <div>
                 <h3>Task 3</h3>
-                <p>Download our app and earn 3 TRX.</p>
+                <p>Download our app and earn 3 USD.</p>
                 <button onclick="completeTask(3)">Complete Task</button>
             </div>
         </div>
@@ -242,17 +242,15 @@
         function handleTap(event) {
             const points = Math.min(event.touches ? event.touches.length : 1, 5);
             data.mai += points;
-            data.usd += points * 0.1; // 1 MAI = 0.1 USD
-            data.ton += points * 0.01; // Every 10 MAI = 0.1 TON
             localStorage.setItem('walletData', JSON.stringify(data));
             updateUI();
         }
 
-        // Complete Task
+        // Complete Task and Earn USD
         function completeTask(points) {
-            data.trx += points;
+            data.usd += points; // Adding the points to USD balance
             localStorage.setItem('walletData', JSON.stringify(data));
-            alert(`Task Completed! You earned ${points} TRX.`);
+            alert(`Task Completed! You earned ${points} USD.`);
             updateUI();
         }
 
@@ -262,6 +260,16 @@
             link.select();
             navigator.clipboard.writeText(link.value);
             alert("Link copied to clipboard!");
+        }
+
+        // Handle Referral Invites and Earn TON
+        function handleReferral() {
+            data.invites += 1; // For each referral
+            if (data.invites % 10 === 0) {
+                data.ton += 0.5; // For every 10 referrals, add 0.5 TON
+            }
+            localStorage.setItem('walletData', JSON.stringify(data));
+            updateUI();
         }
     </script>
 </body>
