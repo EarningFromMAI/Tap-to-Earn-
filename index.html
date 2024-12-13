@@ -41,6 +41,22 @@
             display: flex;
         }
 
+        .balance-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+            font-size: 1.2rem;
+        }
+
+        .balance {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            width: 30%;
+            text-align: center;
+        }
+
         .tap-container .circle {
             width: 200px;
             height: 200px;
@@ -51,6 +67,7 @@
             align-items: center;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
             cursor: pointer;
+            margin-top: -50px;
         }
 
         .tap-container .circle span {
@@ -121,6 +138,8 @@
     <div id="mainPage" class="main-page active">
         <div class="balance-container">
             <div class="balance"><span id="maiBalance">0.00</span> MAI</div>
+            <div class="balance"><span id="usdBalance">0.00</span> $ USD</div>
+            <div class="balance"><span id="tonBalance">0.00</span> TON</div>
         </div>
 
         <div class="tap-container">
@@ -182,6 +201,8 @@
         let data = JSON.parse(localStorage.getItem('walletData')) || {
             daysLeft: 200,
             mai: 0.00,
+            usd: 0.00,
+            ton: 0.00,
             trx: 0.00,
             invites: 0,
             refLink: `https://example.com/refer?user=user_${Date.now()}`
@@ -191,6 +212,8 @@
         function updateUI() {
             document.getElementById('daysCountdown').innerText = data.daysLeft;
             document.getElementById('maiBalance').innerText = data.mai.toFixed(2);
+            document.getElementById('usdBalance').innerText = data.usd.toFixed(2);
+            document.getElementById('tonBalance').innerText = data.ton.toFixed(2);
             document.getElementById('invitesCount').innerText = data.invites;
             document.getElementById('refLink').value = data.refLink;
         }
@@ -219,6 +242,8 @@
         function handleTap(event) {
             const points = Math.min(event.touches ? event.touches.length : 1, 5);
             data.mai += points;
+            data.usd += points * 0.1; // 1 MAI = 0.1 USD
+            data.ton += points * 0.01; // Every 10 MAI = 0.1 TON
             localStorage.setItem('walletData', JSON.stringify(data));
             updateUI();
         }
@@ -228,6 +253,7 @@
             data.trx += points;
             localStorage.setItem('walletData', JSON.stringify(data));
             alert(`Task Completed! You earned ${points} TRX.`);
+            updateUI();
         }
 
         // Copy Referral Link
